@@ -4,9 +4,9 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
 export const signup = async (req, res) => {
-  const { userName, email, password } = req.body;
+  const { fullName, email, password } = req.body;
   try {
-    if (!userName || !email || !password) {
+    if (!fullName || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -24,7 +24,7 @@ export const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
-      userName,
+      fullName,
       email,
       password: hashedPassword,
     });
@@ -35,7 +35,7 @@ export const signup = async (req, res) => {
 
       res.status(201).json({
         _id: newUser._id,
-        userName: newUser.userName,
+        fullName: newUser.fullName,
         email: newUser.email,
         profilePic: newUser.profilePic,
       });
@@ -66,7 +66,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({
       _id: user._id,
-      userName: user.userName,
+      fullName: user.fullName,
       email: user.email,
       profilePic: user.profilePic,
     });
@@ -74,7 +74,6 @@ export const login = async (req, res) => {
     console.log("Error in login controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
-  res.send("login route");
 };
 
 export const logout = async (req, res) => {
@@ -85,7 +84,6 @@ export const logout = async (req, res) => {
     console.log("Error in logout controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
-  res.send("logout route");
 };
 
 export const updateProfile = async (req, res) => {
